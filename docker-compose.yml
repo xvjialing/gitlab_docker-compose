@@ -1,0 +1,37 @@
+version: "3"
+services:
+  gitlab:
+    image: gitlab/gitlab-ce
+    container_name: gitlab
+    restart: always
+    hostname: '192.168.31.230'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url "http://192.168.31.230:9090"
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        gitlab_rails['gitlab_email_enabled'] = true
+        gitlab_rails['gitlab_email_from'] = 'xxx@xxxxx.com'
+        gitlab_rails['gitlab_email_display_name'] = 'xxx'
+        gitlab_rails['gitlab_email_reply_to'] = 'xxxx@xxxxx.com'
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = "smtp.mxhichina.com"
+        gitlab_rails['smtp_port'] = 465
+        gitlab_rails['smtp_user_name'] = "xxx@xxxx.com"
+        gitlab_rails['smtp_password'] = "xxxxx"
+        gitlab_rails['smtp_domain'] = "smtp.mxhichina.com"
+        gitlab_rails['smtp_authentication'] = "login"
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
+        gitlab_rails['smtp_tls'] = true
+    ports:
+      - '9090:9090'
+      - '2222:22'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "10"
